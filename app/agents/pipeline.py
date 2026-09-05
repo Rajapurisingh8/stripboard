@@ -25,6 +25,7 @@ from typing import Any, Callable, Protocol
 from .budget import estimate_budget
 from .continuity import check_continuity
 from .element_tagger import tag_elements
+from .entity_resolution import resolve_entities
 from .scene_parser import split_scenes
 from .scheduler import build_schedule
 
@@ -161,6 +162,27 @@ def run_pipeline(
             }
         )
         scenes = [s.to_schema() for s in parsed.scenes]
+
+    # Canonicalise names before anything counts them. Day-out-of-days and
+    # cast days are built by string matching, so MARISOL and MARISOL VEGA
+    # surviving as two names becomes two actors in the grid and two sets of
+    # cast days in the budget.
+    try:
+        merged = resolve_entities(scenes)
+        if merged:
+            log.info("Entity resolution merged %d alias(es)", len(merged))
+    except Exception as exc:  # noqa: BLE001
+        log.exception("Entity resolution failed")
+        warnings.append(
+            {
+                "code": "entity_resolution_failed",
+                "message": (
+                    f"Name canonicalisation failed ({exc}). The same person or "
+                    "prop may appear under more than one name in the schedule "
+                    "and budget."
+                ),
+            }
+        )
 
     tagged = sum(len(s.get("elements") or []) for s in scenes)
     low_confidence = [
