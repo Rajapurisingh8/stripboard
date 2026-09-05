@@ -1,0 +1,2 @@
+- [Python environment setup](python-environment.md) — use a local uv virtual environment because the system Python is immutable.
+- [GitHub connector push](github-connector-push.md) — the connector authenticates API writes, not necessarily command-line Git pushes.

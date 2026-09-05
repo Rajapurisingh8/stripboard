@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/breakdown.json",
+  "title": "Script Breakdown",
+  "description": "Output contract for the scene-splitter and element-tagger agents. Every downstream agent (scheduler, budget, continuity QA) reads this and nothing else. Element categories and page-eighths follow standard US production breakdown convention.",
+  "type": "object",
+  "required": ["script", "scenes"],
+  "additionalProperties": false,
+
+  "properties": {
+    "script": {
+      "type": "object",
+      "required": ["title", "total_pages"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "total_pages": { "type": "number", "minimum": 0 },
+        "source_format": { "enum": ["fountain", "pdf", "fdx", "txt"] },
+        "parsed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/scene" }
+    },
+
+    "schedule": {
+      "description": "Written by the scheduler agent, absent until it runs. Shooting days in order.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["day", "scene_numbers"],
+        "additionalProperties": false,
+        "properties": {
+          "day": { "type": "integer", "minimum": 1 },
+          "date": { "type": ["string", "null"] },
+          "unit": { "type": ["string", "null"] },
+          "location": { "type": ["string", "null"] },
+          "scene_numbers": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "total_eighths": { "type": ["integer", "null"], "minimum": 0 },
+          "company_move": { "type": ["boolean", "null"] },
+          "night_work": { "type": ["boolean", "null"] },
+          "rationale": {
+            "description": "Why these scenes are grouped. Shown in the UI so a human can argue with the agent.",
+            "type": ["string", "null"]
+          }
+        }
+      }
+    },
+
+    "budget": {
+      "description": "Written by the budget agent, absent until it runs. Estimates only — the UI must label them as such.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currency": { "type": "string", "default": "USD" },
+        "shoot_days": { "type": ["integer", "null"], "minimum": 0 },
+        "cast_days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "days"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "days": { "type": "integer", "minimum": 0 },
+              "scene_numbers": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "line_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["category", "label", "estimate_low", "estimate_high"],
+            "additionalProperties": false,
+            "properties": {
+              "category": { "type": "string" },
+              "label": { "type": "string" },
+              "estimate_low": { "type": "number", "minimum": 0 },
+              "estimate_high": { "type": "number", "minimum": 0 },
+              "basis": {
+                "description": "What the number is derived from. Never show an estimate without one.",
+                "type": ["string", "null"]
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "warnings": {
+      "description": "Parser-level problems the UI must surface rather than swallow.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "scene_number": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+
+    "scene": {
+      "type": "object",
+      "required": [
+        "scene_number", "int_ext", "set_name", "time_of_day",
+        "page_start", "eighths", "synopsis", "elements"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "scene_number": {
+          "description": "As written in the script. String, not integer — real scripts contain 14A, 14B, A15.",
+          "type": "string",
+          "minLength": 1
+        },
+        "int_ext": { "enum": ["INT", "EXT", "INT/EXT"] },
+        "set_name": {
+          "description": "The slugline set, e.g. DINER KITCHEN. Not the practical location.",
+          "type": "string",
+          "minLength": 1
+        },
+        "location": {
+          "description": "Practical shooting location, if inferable. The scheduler groups on this when present and falls back to set_name.",
+          "type": ["string", "null"]
+        },
+        "time_of_day": { "enum": ["DAY", "NIGHT", "DAWN", "DUSK", "CONTINUOUS", "MOMENTS LATER", "UNSPECIFIED"] },
+        "script_day": {
+          "description": "Story day number for continuity. Null when the agent cannot determine it — do not guess.",
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "page_start": { "type": "number", "minimum": 0 },
+        "eighths": {
+          "description": "Scene length in page eighths, the scheduling unit. A full page is 8.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "synopsis": {
+          "description": "One line, present tense, max ~140 chars. This is what prints on the stripboard strip.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "elements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/element" }
+        },
+        "continuity_flags": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/continuity_flag" }
+        },
+        "confidence": {
+          "description": "Tagger self-report. The UI dims strips below 0.6 so a human knows where to look.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+
+    "element": {
+      "type": "object",
+      "required": ["category", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "description": "Standard breakdown categories. Fixed list — the scheduler and budget agents switch on these, so an agent inventing a new one is a bug.",
+          "enum": [
+            "cast",
+            "background",
+            "stunts",
+            "vehicles",
+            "props",
+            "set_dressing",
+            "wardrobe",
+            "makeup_hair",
+            "special_effects",
+            "visual_effects",
+            "animals",
+            "animal_handler",
+            "music",
+            "sound",
+            "special_equipment",
+            "greenery",
+            "security",
+            "additional_labor",
+            "notes"
+          ]
+        },
+        "name": {
+          "description": "Canonical name, upper case, singular. SHERIFF DALE, not 'the sheriff'. Consistency across scenes is what makes day-out-of-days possible.",
+          "type": "string",
+          "minLength": 1
+        },
+        "quantity": { "type": ["integer", "null"], "minimum": 1 },
+        "speaking": {
+          "description": "Cast only. Speaking roles drive cast day cost.",
+          "type": ["boolean", "null"]
+        },
+        "notes": { "type": ["string", "null"] },
+        "source_quote": {
+          "description": "The span of script text this tag came from. Required for the UI to let a human verify a tag instead of trusting it.",
+          "type": ["string", "null"],
+          "maxLength": 400
+        }
+      }
+    },
+
+    "continuity_flag": {
+      "type": "object",
+      "required": ["severity", "issue"],
+      "additionalProperties": false,
+      "properties": {
+        "severity": { "enum": ["info", "warning", "critical"] },
+        "issue": { "type": "string", "minLength": 1 },
+        "related_scenes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "related_element": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
