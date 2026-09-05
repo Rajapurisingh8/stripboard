@@ -8,7 +8,7 @@ The tagged fixture below is what the tagger *should* produce for The Last
 Shift. It exists so the deterministic stages can be tested without spending
 a Vertex call, and so schema drift is caught before it reaches Replit.
 
-    python3 agents/test_deterministic.py
+    python3 tests/test_deterministic.py
 """
 
 from __future__ import annotations
@@ -18,11 +18,11 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "agents"))
+sys.path.insert(0, str(ROOT))
 
-from budget import estimate_budget  # noqa: E402
-from scene_parser import split_scenes  # noqa: E402
-from scheduler import build_schedule  # noqa: E402
+from app.agents.budget import estimate_budget  # noqa: E402
+from app.agents.scene_parser import split_scenes  # noqa: E402
+from app.agents.scheduler import build_schedule  # noqa: E402
 
 # Elements the tagger is expected to find, keyed by scene number.
 EXPECTED_TAGS: dict[str, dict] = {

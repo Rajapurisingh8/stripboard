@@ -1,4 +1,4 @@
-modules = ["python-base-3.13"]
+modules = ["python-3.11", "nodejs-20"]
 
 [userenv]
 
@@ -6,3 +6,34 @@ modules = ["python-base-3.13"]
 GOOGLE_CLOUD_PROJECT = "key-range-474815-g3"
 GOOGLE_CLOUD_LOCATION = "us-central1"
 GEMINI_MODEL = "gemini-2.5-flash"
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build && npm start"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80

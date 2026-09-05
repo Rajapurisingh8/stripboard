@@ -1,0 +1,127 @@
+{
+  "script": {
+    "title": "The Last Shift",
+    "author": "Elena Marquez",
+    "total_pages": 6.5,
+    "source_format": "fountain",
+    "parsed_at": "2026-09-04T14:00:00Z"
+  },
+  "scenes": [
+    {
+      "scene_number": "1",
+      "int_ext": "INT",
+      "set_name": "DINER KITCHEN",
+      "location": "Mabel's Diner",
+      "time_of_day": "NIGHT",
+      "script_day": 1,
+      "page_start": 1,
+      "eighths": 8,
+      "synopsis": "Marisol closes the kitchen when an injured stray dog appears at the back door.",
+      "confidence": 0.97,
+      "elements": [
+        {"category": "cast", "name": "MARISOL VEGA", "quantity": 1, "speaking": true, "notes": null, "source_quote": "MARISOL scrapes the flat top."},
+        {"category": "animals", "name": "SHEPHERD MIX", "quantity": 1, "speaking": null, "notes": "Calm trained dog", "source_quote": "A SHEPHERD MIX pushes through the door."},
+        {"category": "props", "name": "RED LEASH", "quantity": 1, "speaking": null, "notes": null, "source_quote": "dragging a red leash"}
+      ],
+      "continuity_flags": []
+    },
+    {
+      "scene_number": "2",
+      "int_ext": "EXT",
+      "set_name": "DINER PARKING LOT",
+      "location": "Mabel's Diner",
+      "time_of_day": "NIGHT",
+      "script_day": 1,
+      "page_start": 2,
+      "eighths": 6,
+      "synopsis": "Marisol searches the empty lot and finds a damaged county animal-control truck.",
+      "confidence": 0.92,
+      "elements": [
+        {"category": "cast", "name": "MARISOL VEGA", "quantity": 1, "speaking": true, "notes": null, "source_quote": "Marisol shields her eyes from the rain."},
+        {"category": "vehicles", "name": "ANIMAL CONTROL TRUCK", "quantity": 1, "speaking": null, "notes": "Dented passenger door", "source_quote": "A COUNTY ANIMAL CONTROL TRUCK idles crooked."},
+        {"category": "special_effects", "name": "HEAVY RAIN", "quantity": null, "speaking": null, "notes": "Exterior rain bars", "source_quote": "Rain sheets across the lot."}
+      ],
+      "continuity_flags": []
+    },
+    {
+      "scene_number": "3",
+      "int_ext": "INT",
+      "set_name": "DINER DINING ROOM",
+      "location": "Mabel's Diner",
+      "time_of_day": "NIGHT",
+      "script_day": 1,
+      "page_start": 3,
+      "eighths": 12,
+      "synopsis": "Deputy Cole arrives, recognizes the leash, and warns Marisol not to call animal control.",
+      "confidence": 0.95,
+      "elements": [
+        {"category": "cast", "name": "MARISOL VEGA", "quantity": 1, "speaking": true, "notes": null, "source_quote": "MARISOL locks the front door behind him."},
+        {"category": "cast", "name": "DEPUTY COLE", "quantity": 1, "speaking": true, "notes": null, "source_quote": "DEPUTY COLE removes his soaked hat."},
+        {"category": "animals", "name": "SHEPHERD MIX", "quantity": 1, "speaking": null, "notes": null, "source_quote": "The dog growls beneath booth six."},
+        {"category": "props", "name": "POLICE RADIO", "quantity": 1, "speaking": null, "notes": "Hero and backup", "source_quote": "Cole's radio crackles."}
+      ],
+      "continuity_flags": [
+        {"severity": "warning", "issue": "Marisol's apron is wet after the parking-lot search.", "related_scenes": ["2", "3"], "related_element": "MARISOL VEGA"}
+      ]
+    },
+    {
+      "scene_number": "4",
+      "int_ext": "INT/EXT",
+      "set_name": "ANIMAL CONTROL TRUCK",
+      "location": "Mabel's Diner",
+      "time_of_day": "CONTINUOUS",
+      "script_day": 1,
+      "page_start": 4.5,
+      "eighths": 10,
+      "synopsis": "Marisol and Cole open the truck and discover abandoned cages and a hidden ledger.",
+      "confidence": 0.89,
+      "elements": [
+        {"category": "cast", "name": "MARISOL VEGA", "quantity": 1, "speaking": true, "notes": null, "source_quote": "Marisol climbs into the cargo bay."},
+        {"category": "cast", "name": "DEPUTY COLE", "quantity": 1, "speaking": true, "notes": null, "source_quote": "Cole forces the rear latch."},
+        {"category": "props", "name": "HANDWRITTEN LEDGER", "quantity": 1, "speaking": null, "notes": "Multiple aged pages", "source_quote": "A handwritten ledger is taped under the bench."},
+        {"category": "set_dressing", "name": "EMPTY ANIMAL CAGES", "quantity": 6, "speaking": null, "notes": "Various sizes", "source_quote": "Six empty cages line the walls."},
+        {"category": "special_equipment", "name": "PROCESS TRAILER", "quantity": 1, "speaking": null, "notes": "For truck interior movement", "source_quote": null}
+      ],
+      "continuity_flags": []
+    },
+    {
+      "scene_number": "5",
+      "int_ext": "EXT",
+      "set_name": "COUNTY ACCESS ROAD",
+      "location": "North County Service Road",
+      "time_of_day": "DAWN",
+      "script_day": 2,
+      "page_start": 5.75,
+      "eighths": 6,
+      "synopsis": "At dawn, Marisol follows the dog toward the kennels while Cole calls for backup.",
+      "confidence": 0.94,
+      "elements": [
+        {"category": "cast", "name": "MARISOL VEGA", "quantity": 1, "speaking": true, "notes": "Wardrobe change to dry jacket", "source_quote": "Marisol tightens her jacket."},
+        {"category": "cast", "name": "DEPUTY COLE", "quantity": 1, "speaking": true, "notes": null, "source_quote": "Cole radios their position."},
+        {"category": "animals", "name": "SHEPHERD MIX", "quantity": 1, "speaking": null, "notes": null, "source_quote": "The shepherd mix trots into the pale light."},
+        {"category": "vehicles", "name": "PATROL SUV", "quantity": 1, "speaking": null, "notes": null, "source_quote": "The patrol SUV waits on the shoulder."},
+        {"category": "special_effects", "name": "GROUND FOG", "quantity": null, "speaking": null, "notes": "Low fog across roadway", "source_quote": "Fog hangs low over the access road."}
+      ],
+      "continuity_flags": [
+        {"severity": "info", "issue": "Story advances to day two; update wardrobe and rain continuity.", "related_scenes": ["4", "5"], "related_element": "MARISOL VEGA"}
+      ]
+    }
+  ],
+  "schedule": [
+    {"day": 1, "date": null, "unit": "Main", "location": "Mabel's Diner", "scene_numbers": ["1", "2", "3", "4"], "total_eighths": 36, "company_move": false, "night_work": true, "rationale": "All diner work grouped into one night shoot."},
+    {"day": 2, "date": null, "unit": "Main", "location": "North County Service Road", "scene_numbers": ["5"], "total_eighths": 6, "company_move": true, "night_work": false, "rationale": "Dawn exterior requires a separate call and road control."}
+  ],
+  "budget": {
+    "currency": "USD",
+    "shoot_days": 2,
+    "cast_days": [
+      {"name": "MARISOL VEGA", "days": 2, "scene_numbers": ["1", "2", "3", "4", "5"]},
+      {"name": "DEPUTY COLE", "days": 2, "scene_numbers": ["3", "4", "5"]}
+    ],
+    "line_items": [
+      {"category": "animals", "label": "Trained shepherd mix and handler", "estimate_low": 1800, "estimate_high": 2800, "basis": "Two shoot days plus rehearsal."},
+      {"category": "special_effects", "label": "Rain and ground fog", "estimate_low": 2500, "estimate_high": 4800, "basis": "Rain bars, water truck, foggers, and crew."}
+    ]
+  },
+  "warnings": []
+}

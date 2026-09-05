@@ -44,8 +44,17 @@ INHERITING_TIMES = {"CONTINUOUS", "MOMENTS LATER", "UNSPECIFIED"}
 
 
 def _location_key(scene: dict[str, Any]) -> str:
-    """The thing we group on: practical location, falling back to the set."""
-    return (scene.get("location") or scene.get("set_name") or "UNKNOWN").upper()
+    """Return a stable practical-location key.
+
+    A set named ``DELMAR DINER - KITCHEN`` or ``STATE ROUTE 9 - SHOULDER``
+    already carries a reliable practical-location prefix. Prefer that over
+    model-inferred location labels, which can vary between otherwise identical
+    runs and split one location into multiple shooting days.
+    """
+    set_name = (scene.get("set_name") or "").upper()
+    if " - " in set_name:
+        return set_name.split(" - ", 1)[0]
+    return (scene.get("location") or set_name or "UNKNOWN").upper()
 
 
 def _resolve_times(scenes: list[dict[str, Any]]) -> list[str]:

@@ -1,0 +1,1 @@
+"""Stripboard analysis pipeline."""
