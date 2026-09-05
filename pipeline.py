@@ -22,6 +22,7 @@ import pathlib
 import time
 from typing import Any, Callable, Protocol
 
+from .alias_resolver import resolve_aliases
 from .budget import estimate_budget
 from .continuity import check_continuity
 from .element_tagger import tag_elements
@@ -180,6 +181,27 @@ def run_pipeline(
                     f"Name canonicalisation failed ({exc}). The same person or "
                     "prop may appear under more than one name in the schedule "
                     "and budget."
+                ),
+            }
+        )
+
+    # Then the semantic pass, for names that denote one thing but share no
+    # words — SHEPHERD MIX in one scene and DOG in another. The lexical pass
+    # above cannot see those; a model can. It may only group names we hand
+    # it, and it never touches a number.
+    try:
+        aliased = resolve_aliases(scenes)
+        if aliased:
+            log.info("Alias resolution merged %d name(s)", len(aliased))
+    except Exception as exc:  # noqa: BLE001
+        log.exception("Alias resolution failed")
+        warnings.append(
+            {
+                "code": "alias_resolution_failed",
+                "message": (
+                    f"Cross-scene name reconciliation failed ({exc}). Counts "
+                    "in the schedule and budget may be inflated where one "
+                    "entity was tagged under two names."
                 ),
             }
         )
