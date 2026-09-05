@@ -112,6 +112,35 @@ def _response_schema() -> types.Schema:
     )
 
 
+def _forbidden_pairs(scenes: list[dict[str, Any]]) -> set[tuple[str, str, str]]:
+    """Pairs that may never be merged, as (category, name_a, name_b) sorted.
+
+    **Two names tagged in the same scene, in the same category, are
+    different things.** A tagger reading one scene does not name a single
+    entity twice — exact repeats are already collapsed by the dedupe in the
+    tagger. So co-occurrence is strong evidence of distinctness.
+
+    This is the guard that keeps SEMI and TRUCKER'S RIG apart: both appear
+    on the road in the same scene, so whatever a model believes about the
+    words, they are two picture vehicles. The dog is unaffected — SHEPHERD
+    MIX and DOG never share a scene.
+
+    Learned the hard way: the prompt asks the model not to do this, and the
+    model did it anyway.
+    """
+    forbidden: set[tuple[str, str, str]] = set()
+    for scene in scenes:
+        by_category: dict[str, set[str]] = defaultdict(set)
+        for element in scene.get("elements") or []:
+            by_category[element["category"]].add(element["name"])
+        for category, names in by_category.items():
+            ordered = sorted(names)
+            for i, first in enumerate(ordered):
+                for second in ordered[i + 1 :]:
+                    forbidden.add((category, first, second))
+    return forbidden
+
+
 def _collect(scenes: list[dict[str, Any]]) -> dict[str, list[str]]:
     """Distinct names per resolvable category, where merging is possible."""
     names: dict[str, set[str]] = defaultdict(set)
@@ -162,6 +191,8 @@ def resolve_aliases(scenes: list[dict[str, Any]]) -> dict[str, str]:
     candidates = _collect(scenes)
     if not candidates:
         return {}
+
+    forbidden = _forbidden_pairs(scenes)
 
     payload = json.dumps(candidates, indent=1)
     log.info(
@@ -228,6 +259,18 @@ def resolve_aliases(scenes: list[dict[str, Any]]) -> dict[str, str]:
                     "Alias %r not in supplied %s names; skipped", alias, category
                 )
                 continue
+
+            pair = (category, *sorted((alias, canonical)))
+            if pair in forbidden:
+                log.warning(
+                    "REFUSED alias merge [%s]: %r -> %r — both appear in the "
+                    "same scene, so they are different things",
+                    category,
+                    alias,
+                    canonical,
+                )
+                continue
+
             merges[f"{category}:{alias}"] = canonical
             log.info(
                 "Alias merge [%s]: %r -> %r (%s)",
